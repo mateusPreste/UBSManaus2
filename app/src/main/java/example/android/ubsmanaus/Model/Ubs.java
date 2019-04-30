@@ -1,16 +1,35 @@
 package example.android.ubsmanaus.Model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Ubs implements Serializable {
+    @SerializedName("id")
     public long id;
+
+    @SerializedName("nome")
     public String nome;
+
+    @SerializedName("endereco")
     public String endereco;
+
+    @SerializedName("bairro")
     public String bairro;
+
+    @SerializedName("latitude")
     public String latitude;
+
+    @SerializedName("longitude")
     public String longitude;
+
+    @SerializedName("servicos")
     public String servicos;
+
+    @SerializedName("url_foto")
     public String url_foto;
+
+    @SerializedName("zona")
     public String zona;
 
     public Ubs(long id, String nome, String endereco, String bairro, String latitude,
