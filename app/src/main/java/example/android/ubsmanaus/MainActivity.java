@@ -19,10 +19,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import example.android.ubsmanaus.Adapter.Adapter;
-import example.android.ubsmanaus.Model.Ubs;
+import example.android.ubsmanaus.Model.Countries;
 import example.android.ubsmanaus.Util.Http;
 import example.android.ubsmanaus.Util.HttpRetro;
 import example.android.ubsmanaus.dao.Repositorio;
@@ -33,7 +32,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private Adapter adapter;
-    private List<Ubs> ubsList;
+    private List<Countries> contryList;
     private ListView listView;
     private SwipeRefreshLayout swiperefresh;
     Repositorio db;
@@ -51,9 +50,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         listView = (ListView) findViewById(R.id.listView);
 
-        ubsList = new ArrayList<Ubs>();
+        contryList = new ArrayList<Countries>();
 
-        adapter = new Adapter(this, ubsList);
+        adapter = new Adapter(this, contryList);
 
         db = new Repositorio(getBaseContext());
         getDataRetro();
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 hasPermission();
 
                 Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-                intent.putExtra("ubs",ubsList.get(position));
+                intent.putExtra("ubs", contryList.get(position));
                 startActivity(intent);
             }
         });
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     // chama AsyncTask para requisicao das ubs
     public void getDataHttp () {
-        UbsTask mTask = new UbsTask();
+        CountryTask mTask = new CountryTask();
         mTask.execute();
     }
 
@@ -90,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
     private void getDataSqlite() {
-        ubsList.clear();
-        ubsList.addAll(db.listarUbs());
+        contryList.clear();
+        contryList.addAll(db.listarPaises());
         adapter.notifyDataSetChanged();
     }
 
@@ -101,17 +100,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         // se tiver conexao faz get, senao pega do sqlite
         if (isConnected()) {
-            HttpRetro.getUbsClient().getUbs().enqueue(new Callback<List<Ubs>>() {
-                public void onResponse(Call<List<Ubs>> call, Response<List<Ubs>> response) {
+            HttpRetro.getCountryClient().getUbs().enqueue(new Callback<List<Countries>>() {
+                public void onResponse(Call<List<Countries>> call, Response<List<Countries>> response) {
                     if (response.isSuccessful()) {
-                        List<Ubs> ubsBody = response.body();
-                        ubsList.clear();
+                        List<Countries> countryBody = response.body();
+                        contryList.clear();
 
                         db.excluirAll();
 
-                        for (Ubs ubs : ubsBody) {
-                            ubsList.add(ubs);
-                            db.inserir(ubs);
+                        for (Countries country : countryBody) {
+                            contryList.add(country);
+                            db.inserir(country);
                         }
                         adapter.notifyDataSetChanged();
                     } else {
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 }
 
                 @Override
-                public void onFailure(Call<List<Ubs>> call, Throwable t) {
+                public void onFailure(Call<List<Countries>> call, Throwable t) {
                     t.printStackTrace();
 
                 }
@@ -162,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         getDataRetro();
     }
 
-    class UbsTask extends AsyncTask<Void, Void, List<Ubs>> {
+    class CountryTask extends AsyncTask<Void, Void, List<Countries>> {
 
         @Override
         protected void onPreExecute() {
@@ -171,16 +170,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
 
         @Override
-        protected List<Ubs> doInBackground(Void... voids) {
-            return Http.carregarUbsJson();
+        protected List<Countries> doInBackground(Void... voids) {
+            return Http.carregarCountryJson();
         }
 
         @Override
-        protected void onPostExecute(List<Ubs> ubs) {
+        protected void onPostExecute(List<Countries> ubs) {
             super.onPostExecute(ubs);
             if (ubs != null) {
-                ubsList.clear();
-                ubsList.addAll(ubs);
+                contryList.clear();
+                contryList.addAll(ubs);
                 adapter.notifyDataSetChanged();
             }
             swiperefresh.setRefreshing(false);

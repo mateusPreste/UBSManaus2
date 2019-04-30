@@ -8,7 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import example.android.ubsmanaus.Model.Ubs;
+import example.android.ubsmanaus.Model.Countries;
+
 
 public class Repositorio {
 
@@ -19,22 +20,18 @@ public class Repositorio {
         helper = new SQLHelper(ctx);
     }
 
-    public long inserir(Ubs ubs){
+    public long inserir(Countries country){
         db = helper.getReadableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(SQLHelper.COLUNA_NOME, ubs.nome);
-        cv.put(SQLHelper.COLUNA_ENDERECO, ubs.endereco);
-        cv.put(SQLHelper.COLUNA_BAIRRO, ubs.bairro);
-        cv.put(SQLHelper.COLUNA_LATITUDE, ubs.latitude);
-        cv.put(SQLHelper.COLUNA_LONGITUDE, ubs.longitude);
-        cv.put(SQLHelper.COLUNA_SERVICOS, ubs.servicos);
-        cv.put(SQLHelper.COLUNA_URL_FOTO, ubs.url_foto);
-        cv.put(SQLHelper.COLUNA_ZONA, ubs.zona);
+        cv.put(SQLHelper.NAME_COLUMN, country.name);
+        cv.put(SQLHelper.REGION_COLUMN, country.region);
+        cv.put(SQLHelper.POPULATION_COLUMN, country.population);
+        cv.put(SQLHelper.FLAG_COLUMN, country.flag);
 
-        long id = db.insert(SQLHelper.TABELA_UBS, null, cv);
+        long id = db.insert(SQLHelper.COUNTRY_TABLE, null, cv);
 
         if(id != -1){
-            ubs.id = id;
+            country.id = id;
         }
         db.close();
         return id;
@@ -42,47 +39,34 @@ public class Repositorio {
 
     public void excluirAll(){
         db = helper.getWritableDatabase();
-        db.delete(SQLHelper.TABELA_UBS, null, null);
+        db.delete(SQLHelper.COUNTRY_TABLE, null, null);
         db.close();
     }
 
-    public List<Ubs> listarUbs() {
-        String sql = "SELECT * FROM " + SQLHelper.TABELA_UBS;
+    public List<Countries> listarPaises() {
+        String sql = "SELECT * FROM " + SQLHelper.COUNTRY_TABLE;
         db = helper.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
-        List<Ubs> list = new ArrayList();
+        List<Countries> list = new ArrayList();
 
         while (cursor.moveToNext()) {
             long id = cursor.getLong(
                     cursor.getColumnIndex(SQLHelper.COLUNA_ID)
             );
-            String nome = cursor.getString(
-                    cursor.getColumnIndex(SQLHelper.COLUNA_NOME)
+            String name = cursor.getString(
+                    cursor.getColumnIndex(SQLHelper.NAME_COLUMN)
             );
-            String endereco = cursor.getString(
-                    cursor.getColumnIndex(SQLHelper.COLUNA_ENDERECO)
+            String region = cursor.getString(
+                    cursor.getColumnIndex(SQLHelper.REGION_COLUMN)
             );
-            String bairro = cursor.getString(
-                    cursor.getColumnIndex(SQLHelper.COLUNA_BAIRRO)
+            String population = cursor.getString(
+                    cursor.getColumnIndex(SQLHelper.POPULATION_COLUMN)
             );
-            String latitude = cursor.getString(
-                    cursor.getColumnIndex(SQLHelper.COLUNA_LATITUDE)
-            );
-            String longitude = cursor.getString(
-                    cursor.getColumnIndex(SQLHelper.COLUNA_LONGITUDE)
-            );
-            String servicos = cursor.getString(
-                    cursor.getColumnIndex(SQLHelper.COLUNA_SERVICOS)
-            );
-            String url_foto = cursor.getString(
-                    cursor.getColumnIndex(SQLHelper.COLUNA_URL_FOTO)
-            );
-            String zona = cursor.getString(
-                    cursor.getColumnIndex(
-                            SQLHelper.COLUNA_ZONA)
+            String flag = cursor.getString(
+                    cursor.getColumnIndex(SQLHelper.FLAG_COLUMN)
             );
 
-            Ubs ubs = new Ubs(id, nome, endereco, bairro, latitude, longitude, servicos, url_foto, zona);
+            Countries ubs = new Countries(name, region, population, flag);
             list.add(ubs);
         }
         cursor.close();

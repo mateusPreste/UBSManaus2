@@ -1,5 +1,7 @@
 package example.android.ubsmanaus.Util;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,11 +14,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import example.android.ubsmanaus.Model.Ubs;
+import example.android.ubsmanaus.Model.Countries;
 
 
 public class Http {
-    public static final String UBS_URL_JSON = "https://api.myjson.com/bins/13hcng";
+    public static final String UBS_COUNTRY_JSON = "https://restcountries.eu/rest/v1/all";
 
     private static HttpURLConnection connectar(String urlArquivo) throws IOException{
         final int SEGUNDOS = 1000;
@@ -31,14 +33,15 @@ public class Http {
         return conexao;
     }
 
-    public static List<Ubs> carregarUbsJson() {
+    public static List<Countries> carregarCountryJson() {
         try {
-            HttpURLConnection conexao = connectar(UBS_URL_JSON);
+            Log.d("AAAAA", "DEU RUIM");
+            HttpURLConnection conexao = connectar(UBS_COUNTRY_JSON);
             int resposta = conexao.getResponseCode();
             if (resposta ==  HttpURLConnection.HTTP_OK) {
                 InputStream is = conexao.getInputStream();
                 JSONArray json = new JSONArray(bytesParaString(is));
-                return lerJsonUbs(json);
+                return lerJsonCountry(json);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,25 +49,20 @@ public class Http {
         return null;
     }
 
-    private static List<Ubs> lerJsonUbs(JSONArray json) throws JSONException {
+    private static List<Countries> lerJsonCountry(JSONArray json) throws JSONException {
 
-        List<Ubs> listaDeUbs = new ArrayList<Ubs>();
+        List<Countries> listaDeUbs = new ArrayList<Countries>();
         //JSONArray jsonUbs = json.getJSONArray("ubs");
         for (int j = 0; j < json.length(); j++) {
             JSONObject unidade = json.getJSONObject(j);
-            Ubs ubs = new Ubs(
-                    unidade.getLong("id"),
-                    unidade.getString("nome"),
-                    unidade.getString("endereco"),
-                    unidade.getString("bairro"),
-                    unidade.getString("latitude"),
-                    unidade.getString("longitude"),
-                    unidade.getString("servicos"),
-                    unidade.getString("url_foto"),
-                    unidade.getString("zona")
+            Countries country = new Countries(
+                    unidade.getString("name"),
+                    unidade.getString("subregion"),
+                    unidade.getString("population"),
+                    unidade.getString("name")
 
             );
-            listaDeUbs.add(ubs);
+            listaDeUbs.add(country);
         }
 
         return listaDeUbs;

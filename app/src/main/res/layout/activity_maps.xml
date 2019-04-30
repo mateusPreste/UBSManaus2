@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
         android:text="TextView"
         app:fontFamily="@font/roboto"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,9 @@
         android:layout_marginTop="16dp"
         android:text="Qualquer coisa aqui"
         android:textColor="@color/colorAccent"
-        app:fontFamily="@font/roboto_bold"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:fontFamily="@font/roboto_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,7 +41,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="413dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="100dp"
         map:layout_constraintStart_toStartOf="parent"

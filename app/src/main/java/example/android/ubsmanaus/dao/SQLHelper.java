@@ -6,19 +6,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLHelper extends SQLiteOpenHelper {
 
-    private static final String NOME_BANCO = "dbUbs";
+    private static final String NOME_BANCO = "dbCountry";
     private static final int VERSAO_BANCO = 1;
-    public static final String TABELA_UBS = "ubs_tabela";
     public static final String COLUNA_ID = "_id";
-    public static final String COLUNA_NOME = "nome";
-    public static final String COLUNA_ENDERECO = "endereco";
-    public static final String COLUNA_BAIRRO = "bairro";
-    public static final String COLUNA_LATITUDE = "latitude";
-    public static final String COLUNA_LONGITUDE = "longitude";
-    public static final String COLUNA_SERVICOS = "servicos";
-    public static final String COLUNA_URL_FOTO = "url_foto";
-    public static final String COLUNA_ZONA = "zona";
-
+    public static final String COUNTRY_TABLE = "country_table";
+    public static final String NAME_COLUMN = "name";
+    public static final String REGION_COLUMN = "region";
+    public static final String POPULATION_COLUMN = "population";
+    public static final String FLAG_COLUMN = "flag";
 
     public SQLHelper(Context context) {
         super(context, NOME_BANCO, null, VERSAO_BANCO);
@@ -26,16 +21,12 @@ public class SQLHelper extends SQLiteOpenHelper {
 
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(
-                "CREATE TABLE " + TABELA_UBS + " ( " +
+                "CREATE TABLE " + COUNTRY_TABLE + " ( " +
                         COLUNA_ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                        COLUNA_NOME + " TEXT, " +
-                        COLUNA_ENDERECO + " TEXT, " +
-                        COLUNA_BAIRRO + " TEXT, " +
-                        COLUNA_LATITUDE + " TEXT, " +
-                        COLUNA_LONGITUDE + " TEXT, " +
-                        COLUNA_SERVICOS + " TEXT, " +
-                        COLUNA_URL_FOTO + " TEXT, " +
-                        COLUNA_ZONA + " TEXT)"
+                        NAME_COLUMN + " TEXT, " +
+                        REGION_COLUMN + " TEXT, " +
+                        POPULATION_COLUMN + " TEXT, " +
+                        FLAG_COLUMN + " TEXT)"
         );
 
     }
